@@ -12,6 +12,9 @@ city_map = {
     "new york": "lady liberty"
 }
 
+class DBTypes():
+    ''' namespace for dynamic classes '''
+    pass
 
 def load_db(*, app, uri, populate):
 
@@ -28,9 +31,16 @@ def load_db(*, app, uri, populate):
 
     db.create_all()
 
+    DBTypes.Attraction = Attraction
+
+    db.add_attraction = lambda city, name, db=db, Attraction=Attraction: [
+        db.session.add(Attraction(city=city, name=name)),
+        db.session.commit()
+    ]
+
     if populate:
         for city, name in city_map.items():
-            db.session.add(Attraction(city=name, name=name))
+            db.add_attraction(city, name)
 
         db.session.commit()
 

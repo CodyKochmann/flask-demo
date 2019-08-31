@@ -5,8 +5,8 @@ This series of problems or questions relate to a position (contract or permanent
 
 - Second (Starting Up); Using python 3+, and flask, please create a small and functioning flask application.
 -- Add a dict of any give cities of your choosing as the keys and an attraction in that city as the value
--- Create a GET endpoint /city/*cityname*/attraction/ that will reply with the attraction in JSON format
--- or an appropriate error if the cityname is not found
+-- Create a GET endpoint /city/*city*/attraction/ that will reply with the attraction in JSON format
+-- or an appropriate error if the city is not found
 
 ~~ show us the code you wrote (preferably written here)
 
@@ -21,7 +21,7 @@ This series of problems or questions relate to a position (contract or permanent
 - Third (Models); Using sqlalchemy, refactor your previous application to move the city-and-attraction data to a local database (mysql, sqlite, or similar)
 -- Create a table and model for cities and attractions
 -- Add your previous five cities to this new database
--- Modify the GET endpoint to pull from when responding to /city/*cityname*/attraction/
+-- Modify the GET endpoint to pull from when responding to /city/*city*/attraction/
 -- Add a POST endpoint to add a new city and attraction to the database
 
 ~~ show us the code changes you made (preferably written here)
@@ -37,10 +37,10 @@ This series of problems or questions relate to a position (contract or permanent
 
 import logging, os
 
-from flask import Flask
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 
-from attractions import city_map, load_db
+from attractions import city_map, load_db, DBTypes
 
 
 DB_PATH = '/db/test.db'
@@ -57,16 +57,26 @@ db = load_db(
 # set log level
 app.logger.setLevel(logging.DEBUG)  # I like my logs
 
-@app.route('/city/<cityname>/attraction/', methods=['GET'])
-def get_attraction(cityname):
-    print('get attraction recieved', cityname)
+def get_attraction(city):
+    print('get attraction recieved', city)
+    result = DBTypes.Attraction.query.filter_by(city=city).first()
+    return {'error': 'unregistered city: {}'.format(city)} if result is None else result.name
 
-    return city_map[cityname] if cityname in city_map else {
-        'error':'unregistered city: {}'.format(
-            cityname
-        )
-    }
+def post_attraction(city, name):
+    print('post attraction recieved', city)
+    try:
+        db.add_attraction(city, name)
+        return 'success'
+    except Exception as ex:
+        logging.exception(ex)
+        return {'error': 'couldnt process: {}, {}'.format(city, name)}
 
+@app.route('/city/<city>/attraction/', methods=['GET', 'POST'])
+def attraction(city):
+    if request.method == 'GET':
+        return get_attraction(city)
+    elif request.method == 'POST' and 'name' in request.args:
+        return post_attraction(city, request.args['name'])
 
 @app.route('/')
 def index():
