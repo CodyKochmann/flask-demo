@@ -51,5 +51,20 @@ class AttractionsTest(unittest.TestCase):
         ''' validates that a database file is written to the filesystem '''
         assert os.path.exists('/db/test.db'), 'no database file was found'
 
+    def test_post_city_attraction(self):
+        ''' tests the city attraction insertion api '''
+        # assert that you can insert
+        print('inserting: phoenix -> cacti')
+        self.assertEqual(
+            requests.post('http://0:5000/city/phoenix/attraction/', params={'name': 'cacti'}).text,
+            'success'
+        )
+        # assert that you can find what you just inserted
+        print('verifying: phoenix -> cacti')
+        self.assertEqual(
+            requests.get('http://0:5000/city/phoenix/attraction/').text,
+            'cacti'
+        )
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
