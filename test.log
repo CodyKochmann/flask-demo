@@ -1,54 +1,88 @@
-Sending build context to Docker daemon  86.02kB
-Step 1/9 : FROM python:alpine
+Sending build context to Docker daemon  152.1kB
+Step 1/10 : FROM python:alpine
  ---> fe3ef29c73f3
-Step 2/9 : COPY ./requirements.txt .
+Step 2/10 : COPY ./requirements.txt .
  ---> Using cache
- ---> b9b8d42cf30f
-Step 3/9 : RUN python -m venv flaskvenv   && /flaskvenv/bin/pip install --no-cache-dir -r /requirements.txt   && rm requirements.txt   && adduser -D flask
+ ---> c621baf57008
+Step 3/10 : RUN python -m venv flaskvenv   && /flaskvenv/bin/pip install --no-cache-dir -r /requirements.txt   && rm requirements.txt   && adduser -D flask
  ---> Using cache
- ---> 31fb14ce8f7b
-Step 4/9 : COPY ./src /home/flask/src
- ---> Using cache
- ---> f83362785870
-Step 5/9 : RUN chown -Rv flask:nogroup /home/flask   && chmod -Rv 500 /home/flask
- ---> Using cache
- ---> 351c11096b6c
-Step 6/9 : USER flask
- ---> Using cache
- ---> 0cae6e76f4e8
-Step 7/9 : WORKDIR /home/flask/src
- ---> Using cache
- ---> 5a67ca0996e3
-Step 8/9 : ENV FLASK_APP=app.py
- ---> Using cache
- ---> cf3c9c4823bd
-Step 9/9 : CMD ["/flaskvenv/bin/flask", "run"]
- ---> Using cache
- ---> a9e4f5f446d4
-Successfully built a9e4f5f446d4
+ ---> 9672d3160e1c
+Step 4/10 : COPY ./src /home/flask/src
+ ---> 2471056458ad
+Step 5/10 : RUN chown -Rv flask:nogroup /home/flask   && chmod -Rv 500 /home/flask
+ ---> Running in 11b1a718ca04
+changed ownership of '/home/flask/src/attractions.py' to 1000:65533
+changed ownership of '/home/flask/src/app.py' to 1000:65533
+changed ownership of '/home/flask/src/__test__.py' to 1000:65533
+changed ownership of '/home/flask/src' to 1000:65533
+changed ownership of '/home/flask' to 1000:65533
+mode of '/home/flask' changed to 0500 (r-x------)
+mode of '/home/flask/src' changed to 0500 (r-x------)
+mode of '/home/flask/src/attractions.py' changed to 0500 (r-x------)
+mode of '/home/flask/src/app.py' changed to 0500 (r-x------)
+mode of '/home/flask/src/__test__.py' changed to 0500 (r-x------)
+Removing intermediate container 11b1a718ca04
+ ---> 0b2e5c4b894c
+Step 6/10 : RUN mkdir /db && chown flask:nogroup /db
+ ---> Running in 790e2c0db4d5
+Removing intermediate container 790e2c0db4d5
+ ---> ccd82e9086a1
+Step 7/10 : USER flask
+ ---> Running in 3b0299452445
+Removing intermediate container 3b0299452445
+ ---> 9c8ad3f93499
+Step 8/10 : WORKDIR /home/flask/src
+ ---> Running in 4e2a3bb35a20
+Removing intermediate container 4e2a3bb35a20
+ ---> 9d6ea9da4b94
+Step 9/10 : ENV FLASK_APP=app.py
+ ---> Running in 99518558502e
+Removing intermediate container 99518558502e
+ ---> 18b34cee5e6a
+Step 10/10 : CMD ["/flaskvenv/bin/flask", "run"]
+ ---> Running in 2e03e780cd11
+Removing intermediate container 2e03e780cd11
+ ---> bb010c3a8623
+Successfully built bb010c3a8623
 Successfully tagged test:latest
 server - * Serving Flask app "app.py"
 server - * Environment: production
 server - WARNING: This is a development server. Do not use it in a production deployment.
 server - Use a production WSGI server instead.
 server - * Debug mode: off
+/flaskvenv/lib/python3.7/site-packages/flask_sqlalchemy/__init__.py:835: FSADeprecationWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True or False to suppress this warning.
+  'SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and '
  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+test_db_created (__main__.AttractionsTest)
+validates that a database file is written to the filesystem ... setting up
+tearing down
+ok
 test_get_city (__main__.AttractionsTest)
 positive testing of the server ... setting up
 testing: baltimore -> national aquarium
-127.0.0.1 - - [31/Aug/2019 13:46:04] "GET /city/baltimore/attraction/ HTTP/1.1" 200 -
+127.0.0.1 - - [31/Aug/2019 16:24:15] "GET /city/baltimore/attraction/ HTTP/1.1" 200 -
 testing: severn -> nsa headquarters
-127.0.0.1 - - [31/Aug/2019 13:46:04] "GET /city/severn/attraction/ HTTP/1.1" 200 -
+127.0.0.1 - - [31/Aug/2019 16:24:15] "GET /city/severn/attraction/ HTTP/1.1" 200 -
 testing: san francisco -> golden gate bridge
-127.0.0.1 - - [31/Aug/2019 13:46:04] "GET /city/san%20francisco/attraction/ HTTP/1.1" 200 -
+127.0.0.1 - - [31/Aug/2019 16:24:15] "GET /city/san%20francisco/attraction/ HTTP/1.1" 200 -
 testing: rachel -> area 51
-127.0.0.1 - - [31/Aug/2019 13:46:04] "GET /city/rachel/attraction/ HTTP/1.1" 200 -
+127.0.0.1 - - [31/Aug/2019 16:24:15] "GET /city/rachel/attraction/ HTTP/1.1" 200 -
+testing: new york -> lady liberty
+127.0.0.1 - - [31/Aug/2019 16:24:15] "GET /city/new%20york/attraction/ HTTP/1.1" 200 -
 tearing down
 ok
 test_missing_city (__main__.AttractionsTest)
 negative testing of the server ... setting up
 testing to see if america returns a city attraction
-127.0.0.1 - - [31/Aug/2019 13:46:05] "GET /city/america/attraction/ HTTP/1.1" 200 -
+127.0.0.1 - - [31/Aug/2019 16:24:15] "GET /city/america/attraction/ HTTP/1.1" 200 -
+tearing down
+ok
+test_post_city_attraction (__main__.AttractionsTest)
+tests the city attraction insertion api ... setting up
+inserting: phoenix -> cacti
+127.0.0.1 - - [31/Aug/2019 16:24:15] "POST /city/phoenix/attraction/?name=cacti HTTP/1.1" 200 -
+verifying: phoenix -> cacti
+127.0.0.1 - - [31/Aug/2019 16:24:15] "GET /city/phoenix/attraction/ HTTP/1.1" 200 -
 tearing down
 ok
 test_server_listening (__main__.AttractionsTest)
@@ -57,6 +91,6 @@ tearing down
 ok
 
 ----------------------------------------------------------------------
-Ran 3 tests in 0.064s
+Ran 5 tests in 0.141s
 
 OK
