@@ -14,6 +14,7 @@ This series of problems or questions relate to a position (contract or permanent
 !! extra credit if you provide us a with a github or gitlab link to your work (as an alternative to writing it here)
 !! extra credit if you show us that you used docker in getting this application running
 '''
+import logging
 
 from flask import Flask
 from attractions import city_map
@@ -21,7 +22,21 @@ from attractions import city_map
 # import sanity check
 assert isinstance(city_map, dict), 'city_map should have been a dict... {}'.format(city_map)
 
+# initialize app (this demo didnt really call for anything more complicated)
 app = Flask(__name__)
+
+# set log level
+app.logger.setLevel(logging.DEBUG)  # I like my logs
+
+@app.route('/city/<cityname>/attraction/', methods=['GET'])
+def get_attraction(cityname):
+    print('get attraction recieved', cityname)
+    return city_map[cityname] if cityname in city_map else {
+        'error':'unregistered city: {}'.format(
+            cityname
+        )
+    }
+
 
 @app.route('/')
 def index():
