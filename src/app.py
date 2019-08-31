@@ -77,6 +77,8 @@ def attraction(city):
         return get_attraction(city)
     elif request.method == 'POST' and 'name' in request.args:
         return post_attraction(city, request.args['name'])
+    else:
+        return {'error': 'invalid request'}
 
 @app.route('/')
 def index():
