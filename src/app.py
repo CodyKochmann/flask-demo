@@ -40,31 +40,19 @@ import logging, os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-from attractions import city_map
+from attractions import city_map, load_db
 
-app = Flask(__name__)
 
 DB_PATH = '/db/test.db'
-DB_EXISTS = os.path.exists(DB_PATH)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}'.format(DB_PATH)
 
-db = SQLAlchemy(app)
+app = Flask(__name__)
+db = load_db(
+    app=app,
+    uri='sqlite:////db/test.db',
+    populate=(not os.path.exists(DB_PATH))
+)
 
-class Attraction(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    city = db.Column(db.String(64), unique=True, nullable=False)
-    name = db.Column(db.String(128), nullable=False)
-    def __repr__(self):
-        return str({'city':self.city, 'name':self.name})
-
-db.create_all()
-
-if not DB_EXISTS:
-    for city, name in city_map.items():
-        db.session.add(Attraction(city=name, name=name))
-
-    db.session.commit()
 
 # set log level
 app.logger.setLevel(logging.DEBUG)  # I like my logs

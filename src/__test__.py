@@ -47,5 +47,9 @@ class AttractionsTest(unittest.TestCase):
         response = requests.get('http://0:5000/city/america/attraction/').text
         self.assertEqual(json.loads(response), {"error": "unregistered city: america"})
 
+    def test_db_created(self):
+        ''' validates that a database file is written to the filesystem '''
+        assert os.path.exists('/db/test.db'), 'no database file was found'
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
