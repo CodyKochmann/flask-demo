@@ -18,6 +18,9 @@ This series of problems or questions relate to a position (contract or permanent
 from flask import Flask
 from attractions import city_map
 
+# import sanity check
+assert isinstance(city_map, dict), 'city_map should have been a dict... {}'.format(city_map)
+
 app = Flask(__name__)
 
 @app.route('/')
