@@ -16,6 +16,8 @@ COPY ./src /home/flask/src
 RUN chown -Rv flask:nogroup /home/flask \
   && chmod -Rv 500 /home/flask
 
+RUN mkdir /db && chown flask:nogroup /db
+
 # set up the execution
 USER flask
 WORKDIR /home/flask/src
